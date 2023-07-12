@@ -1,0 +1,64 @@
+.filter__button {
+  position: relative;
+}
+
+.category-button {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  border: 1px solid #ffffff;
+  border-radius: 60px;
+  padding: 6px 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.--active,
+.--active:hover {
+  color: #b672ff;
+  border-color: #b672ff;
+}
+
+/* Crit: Это стиль должен быть в родителе */
+.filter__button:not(:last-child) {
+  margin-right: 10px;
+}
+
+.filter-popup {
+  padding: 32px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  border-radius: 12px;
+  background: #313131;
+  min-width: 269px;
+}
+
+.filter-popup-list {
+  overflow-y: auto;
+  max-height: 212px;
+  max-width: 242px;
+}
+
+.filter-popup-list-item {
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.filter-popup-list-item:hover {
+  color: #b672ff;
+  text-decoration-line: underline;
+}
+
+.filter-popup-list-item + .filter-popup-list-item {
+  margin-top: 28px;
+}

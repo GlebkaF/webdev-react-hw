@@ -1,6 +1,6 @@
 import './AudioPlayer.css'
 
-export default function AudioPlayer() {
+export default function AudioPlayer({ isLoading }) {
   return (
     <div className="bar">
       <div className="bar__content">
@@ -44,12 +44,12 @@ export default function AudioPlayer() {
                 </div>
                 <div className="track-play__author">
                   <a className="track-play__author-link" href="http://">
-                    Ты та...
+                    {isLoading ? <div className="skeleton"></div> : ' Ты та...'}
                   </a>
                 </div>
                 <div className="track-play__album">
                   <a className="track-play__album-link" href="http://">
-                    Баста
+                    {isLoading ? <div className="skeleton"></div> : 'Баста'}
                   </a>
                 </div>
               </div>

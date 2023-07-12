@@ -1,6 +1,6 @@
 import './Track.css'
 
-export default function Track({ track, album, artist, time }) {
+export default function Track({ track, album, artist, time, isLoading }) {
   return (
     <div className="playlist__item">
       <div className="playlist__track track">
@@ -11,26 +11,42 @@ export default function Track({ track, album, artist, time }) {
             </svg>
           </div>
           <div className="track__title-text">
-            <a className="track__title-link" href="http://">
-              {track} <span className="track__title-span"></span>
-            </a>
+            {isLoading ? (
+              <div className="skeleton"></div>
+            ) : (
+              <a className="track__title-link" href="http://">
+                {track} <span className="track__title-span"></span>
+              </a>
+            )}
           </div>
         </div>
         <div className="track__author">
-          <a className="track__author-link" href="http://">
-            {artist}
-          </a>
+          {isLoading ? (
+            <div className="skeleton"></div>
+          ) : (
+            <a className="track__author-link" href="http://">
+              {artist}
+            </a>
+          )}
         </div>
         <div className="track__album">
-          <a className="track__album-link" href="http://">
-            {album}
-          </a>
+          {isLoading ? (
+            <div className="skeleton"></div>
+          ) : (
+            <a className="track__album-link" href="http://">
+              {album}
+            </a>
+          )}
         </div>
         <div className="track__time">
           <svg className="track__time-svg" alt="time">
             <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
           </svg>
-          <span className="track__time-text">{time}</span>
+          {isLoading ? (
+            <span className="track__time-text">0:00</span>
+          ) : (
+            <span className="track__time-text">{time}</span>
+          )}
         </div>
       </div>
     </div>

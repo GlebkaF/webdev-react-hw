@@ -121,3 +121,23 @@
   text-align: right;
   color: #696969;
 }
+
+.skeleton {
+  width: 100%;
+  background-color: #313131;
+  min-width: 170px;
+  height: 20px;
+  animation: changeBackgroundColor 2s infinite;
+}
+
+@keyframes changeBackgroundColor {
+  0% {
+    background-color: #313131;
+  }
+  50% {
+    background-color: #515151;
+  }
+  100% {
+    background-color: #313131;
+  }
+}
