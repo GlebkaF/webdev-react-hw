@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import AudioPlayer from './components/AudioPlayer'
-import NavMenu from './components/NavMenu'
+import AudioPlayer from './components/AudioPlayer/AudioPlayer'
+import NavMenu from './components/NavMenu/NavMenu'
 import SideBar from './components/SideBar'
 import Tracklist from './components/Tracklist'
 
