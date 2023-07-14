@@ -103,8 +103,8 @@ export default function Tracklist({ isLoading = true }) {
         <TracklistHeader></TracklistHeader>
         <div className="content__playlist playlist">
           {isLoading ? (
-            [1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => (
-              <Track isLoading={true}></Track>
+            [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+              <Track key={item} isLoading={true}></Track>
             ))
           ) : (
             <>

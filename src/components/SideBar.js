@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './SideBar.css'
 export default function SideBar({ isLoading }) {
   return (
@@ -9,41 +10,42 @@ export default function SideBar({ isLoading }) {
       <div className="sidebar__block">
         <div className="sidebar__list">
           {isLoading ? (
-            [1, 2, 3].map(() => {
+            [1, 2, 3].map((item) => {
               return (
-                <>
-                  <div className="sidebar__item sidebar__item--skeleton"></div>
-                </>
+                <div
+                  key={item}
+                  className="sidebar__item sidebar__item--skeleton"
+                ></div>
               )
             })
           ) : (
             <>
               <div className="sidebar__item">
-                <a className="sidebar__link" href="#">
+                <Link className="sidebar__link" to="/category/1">
                   <img
                     className="sidebar__img"
                     src="img/playlist01.png"
                     alt="day's playlist"
                   />
-                </a>
+                </Link>
               </div>
               <div className="sidebar__item">
-                <a className="sidebar__link" href="#">
+                <Link className="sidebar__link" to="/category/2">
                   <img
                     className="sidebar__img"
                     src="img/playlist02.png"
                     alt="day's playlist"
                   />
-                </a>
+                </Link>
               </div>
               <div className="sidebar__item">
-                <a className="sidebar__link" href="#">
+                <Link className="sidebar__link" to="/category/3">
                   <img
                     className="sidebar__img"
                     src="img/playlist03.png"
                     alt="day's playlist"
                   />
-                </a>
+                </Link>
               </div>
             </>
           )}

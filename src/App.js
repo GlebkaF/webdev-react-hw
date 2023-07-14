@@ -1,33 +1,15 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import AudioPlayer from './components/AudioPlayer/AudioPlayer'
-import NavMenu from './components/NavMenu/NavMenu'
-import SideBar from './components/SideBar'
-import Tracklist from './components/Tracklist'
+import { useState } from 'react'
+import AppRoutes from './routes'
 
-function App() {
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 5000)
-  }, [])
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    document.cookie.includes('token'),
+  )
 
   return (
-    <div className="app">
-      <div className="wrapper">
-        <div className="container">
-          <main className="main">
-            <NavMenu />
-            <Tracklist isLoading={isLoading} />
-            <SideBar isLoading={isLoading} />
-          </main>
-          <AudioPlayer isLoading={isLoading} />
-        </div>
-      </div>
-    </div>
+    <AppRoutes
+      isLoggedIn={isLoggedIn}
+      setIsLoggedIn={setIsLoggedIn}
+    ></AppRoutes>
   )
 }
-
-export default App
