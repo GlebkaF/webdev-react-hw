@@ -179,7 +179,7 @@ export const TrackPlayImage = styled.div`
   grid-area: image;
 `
 
-export const TrackPlaySvg = styled.div`
+export const TrackPlaySvg = styled.svg`
   width: 18px;
   height: 17px;
   fill: transparent;
