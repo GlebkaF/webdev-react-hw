@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Track from './Track'
 import './Tracklist.css'
 import CategoryItem from './CategoryItem/CategoryItem'
+import { getTracks } from '../api'
 
 const TracklistHeader = () => {
   return (
@@ -93,7 +94,29 @@ const TracklistSerach = () => {
   )
 }
 
-export default function Tracklist({ isLoading = true }) {
+export default function Tracklist({ setTrack }) {
+  const [loading, setLoading] = useState(false)
+  const [tracks, setTracks] = useState([])
+  const [error, setError] = useState('')
+
+  const fetchTracks = async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const tracks = await getTracks()
+      setTracks(tracks)
+    } catch (error) {
+      console.error(error)
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchTracks()
+  }, [])
+
   return (
     <div className="main__centerblock centerblock">
       <TracklistSerach></TracklistSerach>
@@ -101,84 +124,31 @@ export default function Tracklist({ isLoading = true }) {
       <TracklistSearchBySelect></TracklistSearchBySelect>
       <div className="centerblock__content">
         <TracklistHeader></TracklistHeader>
+        {error ? (
+          <p>Не удалось загрузить плейлист, попробуйте позже: {error}</p>
+        ) : null}
         <div className="content__playlist playlist">
-          {isLoading ? (
-            [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-              <Track key={item} isLoading={true}></Track>
-            ))
-          ) : (
-            <>
-              <Track
-                track="Guilt"
-                artist="Nero"
-                album="Welcome Reality"
-                time="4:44"
-              ></Track>
-
-              <Track
-                track="Elektro"
-                artist="Dynoro, Outwork, Mr. Gee"
-                album="Elektro"
-                time="2:22"
-              />
-
-              <Track
-                track="I'm Fire"
-                artist="Ali Bakgor"
-                album="I'm Fire"
-                time="2:22"
-              />
-
-              <Track
-                track="Non Stop"
-                artist="Стоункат, Psychopath"
-                album="Non Stop"
-                time="4:12"
-              />
-
-              <Track
-                track="Run Run"
-                artist="Jaded, Will Clarke, AR/CO"
-                album="Run Run"
-                time="2:54"
-              />
-
-              <Track
-                track="Eyes on Fire"
-                artist="Blue Foundation, Zeds Dead"
-                album="Eyes on Fire"
-                time="5:20"
-              />
-
-              <Track
-                track="Mucho Bien"
-                artist="HYBIT, Mr. Black, Offer Nissim, Hi Profile"
-                album="Mucho Bien"
-                time="3:41"
-              />
-
-              <Track
-                track="Knives n Cherries"
-                artist="minthaze"
-                album="Captivating"
-                time="1:48"
-              />
-
-              <Track
-                track="How Deep Is Your Love"
-                artist="Calvin Harris, Disciples"
-                album="How Deep Is Your Love"
-                time="3:32"
-              />
-
-              <Track
-                track="Morena"
-                artist="Tom Boxer"
-                album="Soundz Made in Romania"
-                time="3:36"
-              />
-            </>
-          )}
+          {loading
+            ? [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+                <Track key={item} isLoading={true}></Track>
+              ))
+            : tracks.map((track) => (
+                <Track
+                  key={track.id}
+                  url={track.track_file}
+                  track={track.name}
+                  artist={track.author}
+                  album={track.album}
+                  time={
+                    Math.floor(track.duration_in_seconds / 60)
+                      .toString()
+                      .padStart(2, '0') +
+                    ':' +
+                    (track.duration_in_seconds % 60).toString().padStart(2, '0')
+                  }
+                  setTrack={setTrack}
+                ></Track>
+              ))}
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import SideBar from '../../components/SideBar'
 
 export default function MainPage({ isLoggedIn, setIsLoggedIn }) {
   const [isLoading, setIsLoading] = useState(true)
+  const [track, setTrack] = useState(null)
 
   useEffect(() => {
     setTimeout(() => {
@@ -22,10 +23,17 @@ export default function MainPage({ isLoggedIn, setIsLoggedIn }) {
         <div className="container">
           <main className="main">
             <NavMenu isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-            <Tracklist isLoading={isLoading} />
+            <Tracklist isLoading={isLoading} setTrack={setTrack} />
             <SideBar isLoading={isLoading} />
           </main>
-          <AudioPlayer isLoading={isLoading} />
+          {track ? (
+            <AudioPlayer
+              isLoading={isLoading}
+              track={track.track}
+              artist={track.artist}
+              url={track.url}
+            />
+          ) : null}
         </div>
       </div>
     </div>

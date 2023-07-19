@@ -1,6 +1,14 @@
 import './Track.css'
 
-export default function Track({ track, album, artist, time, isLoading }) {
+export default function Track({
+  track,
+  album,
+  artist,
+  url,
+  time,
+  isLoading,
+  setTrack,
+}) {
   return (
     <div className="playlist__item">
       <div className="playlist__track track">
@@ -14,7 +22,19 @@ export default function Track({ track, album, artist, time, isLoading }) {
             {isLoading ? (
               <div className="skeleton"></div>
             ) : (
-              <a className="track__title-link" href="http://">
+              <a
+                className="track__title-link"
+                href="#1"
+                onClick={(event) => {
+                  event.preventDefault()
+                  console.log({ track, artist, url })
+                  setTrack({
+                    track,
+                    artist,
+                    url,
+                  })
+                }}
+              >
                 {track} <span className="track__title-span"></span>
               </a>
             )}
@@ -43,7 +63,7 @@ export default function Track({ track, album, artist, time, isLoading }) {
             <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
           </svg>
           {isLoading ? (
-            <span className="track__time-text">0:00</span>
+            <span className="track__time-text">00:00</span>
           ) : (
             <span className="track__time-text">{time}</span>
           )}

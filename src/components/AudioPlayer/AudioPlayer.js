@@ -1,9 +1,17 @@
 import './AudioPlayer.styles.js'
 import * as S from './AudioPlayer.styles.js'
 
-export default function AudioPlayer({ isLoading }) {
+export default function AudioPlayer({
+  isLoading,
+  track = '',
+  artist = '',
+  url = '',
+}) {
   return (
     <S.Bar>
+      <audio controls src={url}>
+        <a href={url}>Download audio</a>
+      </audio>
       <S.BarContent>
         <S.PlayerProgress></S.PlayerProgress>
         <S.PlayerBlock>
@@ -57,12 +65,20 @@ export default function AudioPlayer({ isLoading }) {
                 </S.TrackPlayImage>
                 <S.TrackPlayAuthor>
                   <S.TrackPlayAuthorLink href="http://">
-                    {isLoading ? <div className="skeleton"></div> : ' Ты та...'}
+                    {isLoading ? (
+                      <div className="skeleton"></div>
+                    ) : (
+                      <span>{track}</span>
+                    )}
                   </S.TrackPlayAuthorLink>
                 </S.TrackPlayAuthor>
                 <S.TrackPlayAlbum>
                   <S.TrackPlayAlbumLink href="http://">
-                    {isLoading ? <div className="skeleton"></div> : 'Баста'}
+                    {isLoading ? (
+                      <div className="skeleton"></div>
+                    ) : (
+                      <span>{artist}</span>
+                    )}
                   </S.TrackPlayAlbumLink>
                 </S.TrackPlayAlbum>
               </S.TrackContain>
