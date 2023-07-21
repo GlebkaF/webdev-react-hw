@@ -27,7 +27,6 @@ export default function Track({
                 href="#1"
                 onClick={(event) => {
                   event.preventDefault()
-                  console.log({ track, artist, url })
                   setTrack({
                     track,
                     artist,

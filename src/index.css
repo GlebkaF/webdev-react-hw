@@ -69,7 +69,7 @@ body {
 
 ._btn-icon:hover svg {
   fill: transparent;
-  stroke: #acacac;
+
   cursor: pointer;
 }
 
