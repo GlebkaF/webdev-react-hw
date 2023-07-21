@@ -5,7 +5,6 @@ export const Bar = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(28, 28, 28, 0.5);
 `
 
 export const BarContent = styled.div`
@@ -18,10 +17,59 @@ export const BarContent = styled.div`
   flex-direction: column;
 `
 
-export const PlayerProgress = styled.div`
+export const ProgressInput = styled.input`
+  --progress-height: 8px;
+  --progress-color: #b672ff;
+  --progress-color: ${(props) => props.$color ?? '#b672ff'};
+
+  --progress-bg-color: #2e2e2e;
+
   width: 100%;
-  height: 5px;
-  background: #2e2e2e;
+  height: var(--progress-height);
+  -webkit-appearance: none;
+  cursor: pointer;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+
+  &::-webkit-slider-runnable-track {
+    position: relative;
+    height: var(--progress-height);
+    background: var(--progress-bg-color);
+  }
+  &::-webkit-slider-thumb {
+    --thumb-height: 1px;
+    --thumb-width: 1px;
+    position: relative;
+    -webkit-appearance: none;
+    width: var(--thumb-width, var(--thumb-height));
+    box-shadow: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
+      100vmax var(--progress-color);
+  }
+
+  &::-webkit-slider-runnable-track {
+    background: var(--progress-bg-color);
+  }
+
+  /* FF */
+  &::-moz-range-track {
+    width: 100%;
+    height: var(--progress-height);
+    background: var(--progress-bg-color);
+    border: none;
+    border-radius: 0px;
+  }
+  &::-moz-range-thumb {
+    border: none;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  &::-moz-range-progress {
+    background-color: var(--progress-color);
+    height: var(--progress-height);
+  }
 `
 
 export const PlayerBlock = styled.div`
@@ -36,6 +84,8 @@ export const PlayerBlock = styled.div`
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+
+  background: rgba(28, 28, 28, 0.7);
 `
 
 export const BarPlayer = styled.div`
@@ -133,7 +183,7 @@ export const PlayerSvgRepeat = styled.svg`
   width: 18px;
   height: 12px;
   fill: transparent;
-  stroke: #696969;
+  stroke: ${(props) => (props.$active ? 'white' : '#696969')};
 `
 
 export const TrackPlay = styled.div`
@@ -272,4 +322,25 @@ export const VolumeProgress = styled.div`
 `
 export const VolumeProgressInput = styled.input`
   width: 109px;
+`
+
+export const ProgressInfoContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+`
+
+export const ProgressInfoTiming = styled.div`
+  color: #696969;
+  font-family: StratosSkyeng;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.016px;
+  margin-right: 10px;
+`
+
+export const HiddenAudio = styled.audio`
+  display: none;
 `
