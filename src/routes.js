@@ -1,11 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
 import MainPage from './pages/Main/MainPage'
-import LoginPage from './pages/Login/LoginPage'
 import NotFoundPage from './pages/NotFound/NotFoundPage'
 import FavoritesPage from './pages/Favorites/FavoritesPage'
 import CategoryPage from './pages/Category/CategoryPage'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-import RegisterPage from './pages/Register/RegisterPage'
+import AuthPage from './pages/Auth/AuthPage'
 
 export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -13,7 +12,7 @@ export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
       <Route
         path="/"
         element={
-          <ProtectedRoute isAllowed={isLoggedIn} redirectPath="/login">
+          <ProtectedRoute>
             <MainPage
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
@@ -24,18 +23,28 @@ export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
       <Route
         path="/login"
         element={
-          <LoginPage
+          <AuthPage
+            isLoginMode={true}
             isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
-          ></LoginPage>
+          ></AuthPage>
         }
       ></Route>
-      <Route path="/register" element={<RegisterPage></RegisterPage>}></Route>
+      <Route
+        path="/register"
+        element={
+          <AuthPage
+            isLoginMode={false}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+          ></AuthPage>
+        }
+      ></Route>
 
       <Route
         path="/category/:id"
         element={
-          <ProtectedRoute isAllowed={isLoggedIn} redirectPath="/login">
+          <ProtectedRoute>
             <CategoryPage></CategoryPage>
           </ProtectedRoute>
         }
@@ -44,7 +53,7 @@ export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
       <Route
         path="/favorites"
         element={
-          <ProtectedRoute isAllowed={isLoggedIn} redirectPath="/login">
+          <ProtectedRoute>
             <FavoritesPage></FavoritesPage>
           </ProtectedRoute>
         }

@@ -7,7 +7,7 @@ import Tracklist from '../../components/Tracklist'
 import AudioPlayer from '../../components/AudioPlayer/AudioPlayer'
 import SideBar from '../../components/SideBar'
 
-export default function MainPage({ isLoggedIn, setIsLoggedIn }) {
+export default function MainPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [track, setTrack] = useState(null)
 
@@ -22,7 +22,7 @@ export default function MainPage({ isLoggedIn, setIsLoggedIn }) {
       <div className="wrapper">
         <div className="container">
           <main className="main">
-            <NavMenu isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <NavMenu />
             <Tracklist isLoading={isLoading} setTrack={setTrack} />
             <SideBar isLoading={isLoading} />
           </main>

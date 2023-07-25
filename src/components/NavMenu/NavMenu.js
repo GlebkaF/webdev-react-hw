@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import * as S from './NavMenu.styles'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../auth'
 
-export default function NavMenu({ isLoggedIn, setIsLoggedIn }) {
+export default function NavMenu() {
   const [open, setOpen] = useState(true)
   const navigator = useNavigate()
+
+  const { auth, logout } = useAuth()
 
   return (
     <S.MainNav>
@@ -27,22 +30,13 @@ export default function NavMenu({ isLoggedIn, setIsLoggedIn }) {
               <S.MenuLink to="/favorites">Мой плейлист</S.MenuLink>
             </S.MenuItem>
             <S.MenuItem>
-              {!isLoggedIn ? (
+              {!auth ? (
                 <S.MenuLink to="/login">Войти</S.MenuLink>
               ) : (
                 <S.MenuLink
                   onClick={(e) => {
                     e.preventDefault()
-                    document.cookie.split(';').forEach(function (c) {
-                      document.cookie = c
-                        .replace(/^ +/, '')
-                        .replace(
-                          /=.*/,
-                          '=;expires=' + new Date().toUTCString() + ';path=/',
-                        )
-                    })
-                    setIsLoggedIn(false)
-                    navigator('/login')
+                    logout()
                   }}
                 >
                   Выйти
