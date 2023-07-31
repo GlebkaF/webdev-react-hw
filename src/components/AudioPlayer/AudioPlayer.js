@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import './AudioPlayer.styles.js'
 import * as S from './AudioPlayer.styles.js'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  createPauseAction,
+  createPlayAction,
+  nextTrack,
+  prevTrack,
+  toggleShuffled,
+} from '../../store/slice/audioplayer/actions.js'
 
 function secondsToTimeString(seconds) {
   return (
@@ -12,27 +20,21 @@ function secondsToTimeString(seconds) {
   )
 }
 
-export default function AudioPlayer({
-  isLoading,
-  track = '',
-  artist = '',
-  url = '',
-}) {
+export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   const audioRef = useRef(null)
-  const [isPlaying, setIsPlaying] = useState(false)
   const [isLooped, setIsLooped] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(1)
+  const dispatch = useDispatch()
+  const { shuffled, playing } = useSelector((store) => store.audioplayer)
 
   const play = () => {
-    audioRef.current.play()
-    setIsPlaying(true)
+    dispatch(createPlayAction())
   }
 
   const pause = () => {
-    audioRef.current.pause()
-    setIsPlaying(false)
+    dispatch(createPauseAction())
   }
 
   const toggleLoop = () => {
@@ -75,14 +77,24 @@ export default function AudioPlayer({
   }, [])
 
   useEffect(() => {
-    if (url) {
-      play()
+    if (playing) {
+      audioRef.current.play()
+    } else {
+      audioRef.current.pause()
     }
-  }, [url])
+  }, [playing, url])
 
-  const handleSeek = (event) => {
-    audioRef.current.currentTime = event.target.value
+  const handleSeek = (newTime) => {
+    audioRef.current.currentTime = newTime
     play()
+  }
+
+  const handlePrevClick = () => {
+    if (currentTime > 5) {
+      handleSeek(0)
+    } else {
+      dispatch(prevTrack())
+    }
   }
 
   return (
@@ -101,25 +113,20 @@ export default function AudioPlayer({
           max={duration}
           value={currentTime}
           step={0.01}
-          onChange={handleSeek}
+          onChange={(event) => handleSeek(event.target.value)}
         ></S.ProgressInput>
         <S.PlayerBlock>
           <S.BarPlayer>
             <S.PlayerControls>
               <S.PlayerControlWithRightMargin>
-                <S.PlayerSvgPrev
-                  alt="prev"
-                  onClick={() => {
-                    alert('Еще не реализовано')
-                  }}
-                >
+                <S.PlayerSvgPrev alt="prev" onClick={handlePrevClick}>
                   <svg>
                     <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
                   </svg>
                 </S.PlayerSvgPrev>
               </S.PlayerControlWithRightMargin>
               <S.PlayerControlWithRightMargin className="_btn">
-                {isPlaying ? (
+                {playing ? (
                   <S.PlayerSvgPlay onClick={pause} alt="play">
                     <svg
                       width="15"
@@ -144,7 +151,7 @@ export default function AudioPlayer({
                 <S.PlayerSvgNext
                   alt="next"
                   onClick={() => {
-                    alert('Еще не реализовано')
+                    dispatch(nextTrack())
                   }}
                 >
                   <svg>
@@ -162,8 +169,9 @@ export default function AudioPlayer({
               <S.PlayerShuffleIcon className="_btn-icon">
                 <S.PlayerSvgShuffle
                   alt="shuffle"
+                  $active={shuffled}
                   onClick={() => {
-                    alert('Еще не реализовано')
+                    dispatch(toggleShuffled())
                   }}
                 >
                   <svg>
@@ -184,20 +192,12 @@ export default function AudioPlayer({
                 </S.TrackPlayImage>
                 <S.TrackPlayAuthor>
                   <S.TrackPlayAuthorLink href="http://">
-                    {isLoading ? (
-                      <div className="skeleton"></div>
-                    ) : (
-                      <span>{track}</span>
-                    )}
+                    <span>{track}</span>
                   </S.TrackPlayAuthorLink>
                 </S.TrackPlayAuthor>
                 <S.TrackPlayAlbum>
                   <S.TrackPlayAlbumLink href="http://">
-                    {isLoading ? (
-                      <div className="skeleton"></div>
-                    ) : (
-                      <span>{artist}</span>
-                    )}
+                    <span>{artist}</span>
                   </S.TrackPlayAlbumLink>
                 </S.TrackPlayAlbum>
               </S.TrackContain>

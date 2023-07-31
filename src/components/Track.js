@@ -1,22 +1,33 @@
+import { useSelector } from 'react-redux'
 import './Track.css'
 
 export default function Track({
+  id,
   track,
   album,
   artist,
-  url,
   time,
   isLoading,
-  setTrack,
+  onClick,
 }) {
+  const { playing, track: currentTrack } = useSelector(
+    (store) => store.audioplayer,
+  )
+
   return (
     <div className="playlist__item">
       <div className="playlist__track track">
         <div className="track__title">
           <div className="track__title-image">
-            <svg className="track__title-svg" alt="music">
-              <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-            </svg>
+            {currentTrack?.id === id ? (
+              <div
+                className={playing ? 'playing-dot -playing' : 'playing-dot'}
+              ></div>
+            ) : (
+              <svg className="track__title-svg" alt="music">
+                <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+              </svg>
+            )}
           </div>
           <div className="track__title-text">
             {isLoading ? (
@@ -27,11 +38,7 @@ export default function Track({
                 href="#1"
                 onClick={(event) => {
                   event.preventDefault()
-                  setTrack({
-                    track,
-                    artist,
-                    url,
-                  })
+                  onClick()
                 }}
               >
                 {track} <span className="track__title-span"></span>

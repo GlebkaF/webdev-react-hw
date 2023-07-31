@@ -1,15 +1,24 @@
 import { useEffect, useState } from 'react'
 import './MainPage.css'
-// import NavMenu
-
 import NavMenu from '../../components/NavMenu/NavMenu'
 import Tracklist from '../../components/Tracklist'
 import AudioPlayer from '../../components/AudioPlayer/AudioPlayer'
 import SideBar from '../../components/SideBar'
+import { useSelector } from 'react-redux'
 
 export default function MainPage() {
   const [isLoading, setIsLoading] = useState(true)
-  const [track, setTrack] = useState(null)
+
+  const track = useSelector((store) => {
+    if (!store.audioplayer.track) {
+      return null
+    }
+    return {
+      url: store.audioplayer.track.track_file,
+      track: store.audioplayer.track.name,
+      artist: store.audioplayer.track.author,
+    }
+  })
 
   useEffect(() => {
     setTimeout(() => {
@@ -23,12 +32,11 @@ export default function MainPage() {
         <div className="container">
           <main className="main">
             <NavMenu />
-            <Tracklist isLoading={isLoading} setTrack={setTrack} />
+            <Tracklist />
             <SideBar isLoading={isLoading} />
           </main>
           {track ? (
             <AudioPlayer
-              isLoading={isLoading}
               track={track.track}
               artist={track.artist}
               url={track.url}

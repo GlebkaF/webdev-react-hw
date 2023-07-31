@@ -3,6 +3,8 @@ import Track from './Track'
 import './Tracklist.css'
 import CategoryItem from './CategoryItem/CategoryItem'
 import { getTracks } from '../api'
+import { useDispatch } from 'react-redux'
+import { setCurrentTrack } from '../store/slice/audioplayer/actions'
 
 const TracklistHeader = () => {
   return (
@@ -94,10 +96,12 @@ const TracklistSerach = () => {
   )
 }
 
-export default function Tracklist({ setTrack }) {
+export default function Tracklist() {
   const [loading, setLoading] = useState(false)
   const [tracks, setTracks] = useState([])
   const [error, setError] = useState('')
+
+  const dispatch = useDispatch()
 
   const fetchTracks = async () => {
     try {
@@ -139,6 +143,7 @@ export default function Tracklist({ setTrack }) {
                   track={track.name}
                   artist={track.author}
                   album={track.album}
+                  id={track.id}
                   time={
                     Math.floor(track.duration_in_seconds / 60)
                       .toString()
@@ -146,7 +151,14 @@ export default function Tracklist({ setTrack }) {
                     ':' +
                     (track.duration_in_seconds % 60).toString().padStart(2, '0')
                   }
-                  setTrack={setTrack}
+                  onClick={() => {
+                    dispatch(
+                      setCurrentTrack({
+                        playlist: tracks,
+                        track: track,
+                      }),
+                    )
+                  }}
                 ></Track>
               ))}
         </div>

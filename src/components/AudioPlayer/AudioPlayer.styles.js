@@ -161,12 +161,14 @@ export const PlayerShuffleIcon = styled(PlayerControlIcon)`
 export const PlayerSvgPrev = styled.svg`
   width: 15px;
   height: 14px;
+  cursor: pointer;
 `
 export const PlayerSvgNext = styled.svg`
   width: 15px;
   height: 14px;
   fill: inherit;
   stroke: #d9d9d9;
+  cursor: pointer;
 `
 export const PlayerSvgPlay = styled.svg`
   width: 22px;
@@ -178,6 +180,7 @@ export const PlayerSvgShuffle = styled.svg`
   height: 12px;
   fill: transparent;
   stroke: #696969;
+  stroke: ${(props) => (props.$active ? 'white' : '#696969')};
 `
 export const PlayerSvgRepeat = styled.svg`
   width: 18px;
