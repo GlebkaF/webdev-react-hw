@@ -19,7 +19,7 @@ export default function Track({
       <div className="playlist__track track">
         <div className="track__title">
           <div className="track__title-image">
-            {currentTrack?.id === id ? (
+            {currentTrack && currentTrack?.id === id ? (
               <div
                 className={playing ? 'playing-dot -playing' : 'playing-dot'}
               ></div>
