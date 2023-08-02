@@ -1,11 +1,3 @@
-export async function getTracks() {
-  const res = await fetch('https://painassasin.online/catalog/track/all/')
-
-  const jsonData = await res.json()
-
-  return jsonData
-}
-
 // const password = 'gleb@fokin.ru'
 // const email = 'gleb@fokin.ru'
 
