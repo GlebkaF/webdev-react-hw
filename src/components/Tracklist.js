@@ -1,18 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Track from './Track'
 import './Tracklist.css'
 import CategoryItem from './CategoryItem/CategoryItem'
-import { getTracks } from '../api'
 import { useDispatch } from 'react-redux'
 import { setCurrentTrack } from '../store/slice/audioplayer/actions'
 
 const TracklistHeader = () => {
   return (
     <div className="content__title playlist-title">
-      <div className="playlist-title__col col01">Трек</div>
-      <div className="playlist-title__col col02">ИСПОЛНИТЕЛЬ</div>
-      <div className="playlist-title__col col03">АЛЬБОМ</div>
-      <div className="playlist-title__col col04">
+      <div className="playlist-title__col " style={{ width: '447px' }}>
+        Трек
+      </div>
+      <div className="playlist-title__col " style={{ width: '321px' }}>
+        ИСПОЛНИТЕЛЬ
+      </div>
+      <div className="playlist-title__col " style={{ width: '245px' }}>
+        АЛЬБОМ
+      </div>
+      <div
+        className="playlist-title__col "
+        style={{ width: '60px', textAlign: 'end' }}
+      >
         <svg className="playlist-title__svg" alt="time">
           <use xlinkHref="img/icon/sprite.svg#icon-watch"></use>
         </svg>
@@ -96,31 +104,8 @@ const TracklistSerach = () => {
   )
 }
 
-export default function Tracklist() {
-  const [loading, setLoading] = useState(false)
-  const [tracks, setTracks] = useState([])
-  const [error, setError] = useState('')
-
+export default function Tracklist({ error, loading, tracks }) {
   const dispatch = useDispatch()
-
-  const fetchTracks = async () => {
-    try {
-      setLoading(true)
-      setError('')
-      const tracks = await getTracks()
-      setTracks(tracks)
-    } catch (error) {
-      console.error(error)
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchTracks()
-  }, [])
-
   return (
     <div className="main__centerblock centerblock">
       <TracklistSerach></TracklistSerach>
