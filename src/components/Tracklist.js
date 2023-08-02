@@ -106,6 +106,15 @@ const TracklistSerach = () => {
 
 export default function Tracklist({ error, loading, tracks }) {
   const dispatch = useDispatch()
+
+  if (error) {
+    return (
+      <h3>
+        Не удалось загрузить плейлист, попробуйте позже:{' '}
+        {JSON.stringify(error.data, null, 2)}
+      </h3>
+    )
+  }
   return (
     <div className="main__centerblock centerblock">
       <TracklistSerach></TracklistSerach>
@@ -113,29 +122,15 @@ export default function Tracklist({ error, loading, tracks }) {
       <TracklistSearchBySelect></TracklistSearchBySelect>
       <div className="centerblock__content">
         <TracklistHeader></TracklistHeader>
-        {error ? (
-          <p>Не удалось загрузить плейлист, попробуйте позже: {error}</p>
-        ) : null}
         <div className="content__playlist playlist">
           {loading
             ? [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-                <Track key={item} isLoading={true}></Track>
+                <Track key={item} track={{}} isLoading={true}></Track>
               ))
             : tracks.map((track) => (
                 <Track
                   key={track.id}
-                  url={track.track_file}
-                  track={track.name}
-                  artist={track.author}
-                  album={track.album}
-                  id={track.id}
-                  time={
-                    Math.floor(track.duration_in_seconds / 60)
-                      .toString()
-                      .padStart(2, '0') +
-                    ':' +
-                    (track.duration_in_seconds % 60).toString().padStart(2, '0')
-                  }
+                  track={track}
                   onClick={() => {
                     dispatch(
                       setCurrentTrack({

@@ -2,24 +2,41 @@
 // const email = 'gleb@fokin.ru'
 
 export async function login({ email, password }) {
-  const res = await fetch('https://painassasin.online/user/login/', {
-    method: 'POST',
-    body: JSON.stringify({
-      email,
-      password,
+  const [loginRes, tokenRes] = await Promise.all([
+    fetch('https://painassasin.online/user/token/', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'content-type': 'application/json',
+      },
     }),
-    headers: {
-      'content-type': 'application/json',
-    },
-  })
+    fetch('https://painassasin.online/user/login/', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    }),
+  ])
 
-  const jsonData = await res.json()
+  const loginJsonData = await loginRes.json()
+  const tokenJsonData = await tokenRes.json()
 
-  if (!res.ok) {
-    throw new Error(jsonData.detail ?? 'Ошибка сервера')
+  if (!loginRes.ok) {
+    throw new Error(loginJsonData.detail ?? 'Ошибка сервера')
   }
 
-  return jsonData
+  if (!tokenRes.ok) {
+    throw new Error(tokenJsonData.detail ?? 'Ошибка сервера')
+  }
+
+  return { ...loginJsonData, ...tokenJsonData }
 }
 
 export async function register({ email, password }) {
