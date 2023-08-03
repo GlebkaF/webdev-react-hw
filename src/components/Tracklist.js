@@ -1,18 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Track from './Track'
 import './Tracklist.css'
 import CategoryItem from './CategoryItem/CategoryItem'
-import { getTracks } from '../api'
 import { useDispatch } from 'react-redux'
 import { setCurrentTrack } from '../store/slice/audioplayer/actions'
+import { useAuth } from '../auth'
 
 const TracklistHeader = () => {
   return (
     <div className="content__title playlist-title">
-      <div className="playlist-title__col col01">Трек</div>
-      <div className="playlist-title__col col02">ИСПОЛНИТЕЛЬ</div>
-      <div className="playlist-title__col col03">АЛЬБОМ</div>
-      <div className="playlist-title__col col04">
+      <div className="playlist-title__col " style={{ width: '447px' }}>
+        Трек
+      </div>
+      <div className="playlist-title__col " style={{ width: '321px' }}>
+        ИСПОЛНИТЕЛЬ
+      </div>
+      <div className="playlist-title__col " style={{ width: '245px' }}>
+        АЛЬБОМ
+      </div>
+      <div
+        className="playlist-title__col "
+        style={{ width: '60px', textAlign: 'end' }}
+      >
         <svg className="playlist-title__svg" alt="time">
           <use xlinkHref="img/icon/sprite.svg#icon-watch"></use>
         </svg>
@@ -96,71 +105,62 @@ const TracklistSerach = () => {
   )
 }
 
-export default function Tracklist() {
-  const [loading, setLoading] = useState(false)
-  const [tracks, setTracks] = useState([])
-  const [error, setError] = useState('')
-
+export default function Tracklist({
+  error,
+  loading,
+  tracks,
+  showAllTracksAsLiked = false,
+  showSearchBar = true,
+  title = 'Треки',
+}) {
   const dispatch = useDispatch()
+  const { auth } = useAuth()
 
-  const fetchTracks = async () => {
-    try {
-      setLoading(true)
-      setError('')
-      const tracks = await getTracks()
-      setTracks(tracks)
-    } catch (error) {
-      console.error(error)
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
+  if (error) {
+    return (
+      <h3>
+        Не удалось загрузить плейлист, попробуйте позже:{' '}
+        {JSON.stringify(error.data, null, 2)}
+      </h3>
+    )
   }
-
-  useEffect(() => {
-    fetchTracks()
-  }, [])
-
   return (
     <div className="main__centerblock centerblock">
       <TracklistSerach></TracklistSerach>
-      <h2 className="centerblock__h2">Треки</h2>
-      <TracklistSearchBySelect></TracklistSearchBySelect>
+      <h2 className="centerblock__h2">{title}</h2>
+      {showSearchBar && <TracklistSearchBySelect></TracklistSearchBySelect>}
       <div className="centerblock__content">
         <TracklistHeader></TracklistHeader>
-        {error ? (
-          <p>Не удалось загрузить плейлист, попробуйте позже: {error}</p>
-        ) : null}
         <div className="content__playlist playlist">
-          {loading
-            ? [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-                <Track key={item} isLoading={true}></Track>
-              ))
-            : tracks.map((track) => (
-                <Track
-                  key={track.id}
-                  url={track.track_file}
-                  track={track.name}
-                  artist={track.author}
-                  album={track.album}
-                  id={track.id}
-                  time={
-                    Math.floor(track.duration_in_seconds / 60)
-                      .toString()
-                      .padStart(2, '0') +
-                    ':' +
-                    (track.duration_in_seconds % 60).toString().padStart(2, '0')
-                  }
-                  onClick={() => {
-                    dispatch(
-                      setCurrentTrack({
-                        playlist: tracks,
-                        track: track,
-                      }),
-                    )
-                  }}
-                ></Track>
-              ))}
+          {loading ? (
+            [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+              <Track key={item} track={{}} isLoading={true}></Track>
+            ))
+          ) : tracks.length > 0 ? (
+            tracks.map((track) => (
+              <Track
+                key={track.id}
+                track={track}
+                isLiked={
+                  showAllTracksAsLiked
+                    ? true
+                    : !!(track.stared_user ?? []).find(
+                        ({ id }) => id === auth.id,
+                      )
+                }
+                onClick={() => {
+                  dispatch(
+                    setCurrentTrack({
+                      playlist: tracks,
+                      track: track,
+                    }),
+                  )
+                }}
+              ></Track>
+            ))
+          ) : (
+            <h2>В этом плейлисте нет треков</h2>
+          )}
         </div>
       </div>
     </div>

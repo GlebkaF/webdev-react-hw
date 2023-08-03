@@ -5,21 +5,11 @@ import FavoritesPage from './pages/Favorites/FavoritesPage'
 import CategoryPage from './pages/Category/CategoryPage'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import AuthPage from './pages/Auth/AuthPage'
+import PageLayout from './components/PageLayout/PageLayout'
 
 export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <MainPage
-              isLoggedIn={isLoggedIn}
-              setIsLoggedIn={setIsLoggedIn}
-            ></MainPage>
-          </ProtectedRoute>
-        }
-      ></Route>
       <Route
         path="/login"
         element={
@@ -41,23 +31,27 @@ export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
         }
       ></Route>
 
-      <Route
-        path="/category/:id"
-        element={
-          <ProtectedRoute>
-            <CategoryPage></CategoryPage>
-          </ProtectedRoute>
-        }
-      ></Route>
-
-      <Route
-        path="/favorites"
-        element={
-          <ProtectedRoute>
-            <FavoritesPage></FavoritesPage>
-          </ProtectedRoute>
-        }
-      ></Route>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<PageLayout></PageLayout>}>
+          <Route
+            path="/"
+            element={
+              <MainPage
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+              ></MainPage>
+            }
+          ></Route>
+          <Route
+            path="/category/:id"
+            element={<CategoryPage></CategoryPage>}
+          ></Route>
+          <Route
+            path="/favorites"
+            element={<FavoritesPage></FavoritesPage>}
+          ></Route>
+        </Route>
+      </Route>
 
       <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
     </Routes>

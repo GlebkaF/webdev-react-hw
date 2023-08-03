@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import * as S from './NavMenu.styles'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth'
 
 export default function NavMenu() {
   const [open, setOpen] = useState(true)
-  const navigator = useNavigate()
 
   const { auth, logout } = useAuth()
 
@@ -27,7 +25,7 @@ export default function NavMenu() {
               <S.MenuLink to="/">Главное</S.MenuLink>
             </S.MenuItem>
             <S.MenuItem>
-              <S.MenuLink to="/favorites">Мой плейлист</S.MenuLink>
+              <S.MenuLink to="/favorites">Мои треки</S.MenuLink>
             </S.MenuItem>
             <S.MenuItem>
               {!auth ? (
