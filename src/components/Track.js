@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux'
 import './Track.css'
-import { useLikeTrackMutation } from '../api/playlist'
+import { useDislikeTrackMutation, useLikeTrackMutation } from '../api/playlist'
 import { useAuth } from '../auth'
 
-export default function Track({ track, isLoading, onClick }) {
+export default function Track({ track, isLoading, onClick, isLiked }) {
   const time =
     Math.floor(track.duration_in_seconds / 60)
       .toString()
@@ -16,20 +16,32 @@ export default function Track({ track, isLoading, onClick }) {
   )
   const { auth, logout } = useAuth()
 
-  const [like, { error }] = useLikeTrackMutation()
+  const [like, { error: likeError }] = useLikeTrackMutation()
+  const [dislike, { error: dislikeError }] = useDislikeTrackMutation()
 
   const handleLikeClick = () => {
-    like({
-      id: track.id,
-      token: auth.access,
-    })
+    if (isLiked) {
+      dislike({
+        id: track.id,
+        token: auth.access,
+      })
+    } else {
+      like({
+        id: track.id,
+        token: auth.access,
+      })
+    }
   }
 
-  console.log({ error })
+  const error = likeError ?? dislikeError ?? null
 
-  if (error?.status === 401) {
-    logout()
-    return null
+  if (error) {
+    if (error?.status === 401) {
+      logout()
+      return null
+    }
+    console.error(error)
+    alert(`Ошибка лайка: ${error.message}`)
   }
 
   return (
@@ -84,8 +96,13 @@ export default function Track({ track, isLoading, onClick }) {
         </div>
         <div className="track__time">
           <svg className="track__time-svg" alt="time" onClick={handleLikeClick}>
-            <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+            {isLiked ? (
+              <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
+            ) : (
+              <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+            )}
           </svg>
+
           {isLoading ? (
             <span className="track__time-text">00:00</span>
           ) : (

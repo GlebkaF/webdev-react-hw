@@ -56,8 +56,11 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   useEffect(() => {
     const ref = audioRef.current
 
-    setIsLooped(audioRef.current.loop)
-    setVolume(audioRef.current.volume)
+    // Сделал потише, просто чтобы не орала музыка
+    ref.volume = 0.02
+
+    setIsLooped(ref.loop)
+    setVolume(ref.volume)
 
     const handleTimeUpdateEvent = (event) => {
       if (ref.currentTime && ref.duration) {
@@ -202,7 +205,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 </S.TrackPlayAlbum>
               </S.TrackContain>
 
-              <S.TrackPlayLikeDis>
+              {/* <S.TrackPlayLikeDis>
                 <S.TrackLike
                   className="_btn-icon"
                   onClick={() => {
@@ -227,7 +230,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                     </svg>
                   </S.TrackLikeSvg>
                 </S.TrackDislike>
-              </S.TrackPlayLikeDis>
+              </S.TrackPlayLikeDis> */}
             </S.TrackPlay>
           </S.BarPlayer>
           <S.BarVolumeBlock>

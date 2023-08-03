@@ -11,5 +11,14 @@ export default function FavoritesPage() {
     return null
   }
 
-  return <Tracklist tracks={data} error={error} loading={isLoading} />
+  return (
+    <Tracklist
+      tracks={data}
+      error={error}
+      loading={isLoading}
+      showAllTracksAsLiked={true}
+      showSearchBar={false}
+      title="Мои треки"
+    />
+  )
 }

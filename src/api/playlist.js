@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const FAVORITE_TAG = { type: 'Favorites', id: 'Favorites' }
+const TRACKS_TAG = 'Tracks'
 
 export const playlistApi = createApi({
   reducerPath: 'playlistApi',
@@ -10,6 +10,7 @@ export const playlistApi = createApi({
   endpoints: (builder) => ({
     getMainPlaylist: builder.query({
       query: () => '/catalog/track/all/',
+      providesTags: () => [TRACKS_TAG],
     }),
     getMyPlaylist: builder.query({
       query: (token) => ({
@@ -18,7 +19,7 @@ export const playlistApi = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: () => [FAVORITE_TAG],
+      providesTags: () => [TRACKS_TAG],
     }),
     likeTrack: builder.mutation({
       query: ({ id, token }) => ({
@@ -28,13 +29,17 @@ export const playlistApi = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: [FAVORITE_TAG],
+      invalidatesTags: [TRACKS_TAG],
     }),
     dislikeTrack: builder.mutation({
-      query: ({ id }) => ({
+      query: ({ id, token }) => ({
         url: `/catalog/track/${id}/favorite/`,
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
+      invalidatesTags: [TRACKS_TAG],
     }),
   }),
 })
