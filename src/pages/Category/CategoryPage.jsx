@@ -18,8 +18,6 @@ export default function CategoryPage() {
     return null
   }
 
-  console.log(data)
-
   const tracks = data?.items || []
   const name = data?.name || ''
 

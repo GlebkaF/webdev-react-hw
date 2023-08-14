@@ -22,11 +22,8 @@ export const playlistApi = createApi({
       providesTags: () => [TRACKS_TAG],
     }),
     getCategory: builder.query({
-      query: ({ id, token }) => ({
+      query: ({ id }) => ({
         url: `/catalog/selection/${id}/`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }),
       providesTags: () => [TRACKS_TAG],
     }),

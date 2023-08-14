@@ -89,22 +89,6 @@ const TracklistSearchBySelect = () => {
   )
 }
 
-const TracklistSerach = () => {
-  return (
-    <div className="centerblock__search search">
-      <svg className="search__svg">
-        <use xlinkHref="/img/icon/sprite.svg#icon-search"></use>
-      </svg>
-      <input
-        className="search__text"
-        type="search"
-        placeholder="Поиск"
-        name="search"
-      />
-    </div>
-  )
-}
-
 export default function Tracklist({
   error,
   loading,
@@ -115,6 +99,7 @@ export default function Tracklist({
 }) {
   const dispatch = useDispatch()
   const { auth } = useAuth()
+  const [searchQ, setSearchQ] = useState('')
 
   if (error) {
     return (
@@ -124,9 +109,46 @@ export default function Tracklist({
       </h3>
     )
   }
+
+  const filteredTracks = tracks
+    ?.filter((track) =>
+      track.name.toLocaleLowerCase().includes(searchQ.toLocaleLowerCase()),
+    )
+    .map((track) => (
+      <Track
+        key={track.id}
+        track={track}
+        isLiked={
+          showAllTracksAsLiked
+            ? true
+            : !!(track.stared_user ?? []).find(({ id }) => id === auth.id)
+        }
+        onClick={() => {
+          dispatch(
+            setCurrentTrack({
+              playlist: tracks,
+              track: track,
+            }),
+          )
+        }}
+      ></Track>
+    ))
+
   return (
     <div className="main__centerblock centerblock">
-      <TracklistSerach></TracklistSerach>
+      <div className="centerblock__search search">
+        <svg className="search__svg">
+          <use xlinkHref="/img/icon/sprite.svg#icon-search"></use>
+        </svg>
+        <input
+          className="search__text"
+          type="search"
+          placeholder="Поиск"
+          name="search"
+          value={searchQ}
+          onChange={(e) => setSearchQ(e.target.value)}
+        />
+      </div>
       <h2 className="centerblock__h2">{title}</h2>
       {showSearchBar && <TracklistSearchBySelect></TracklistSearchBySelect>}
       <div className="centerblock__content">
@@ -137,27 +159,7 @@ export default function Tracklist({
               <Track key={item} track={{}} isLoading={true}></Track>
             ))
           ) : tracks.length > 0 ? (
-            tracks.map((track) => (
-              <Track
-                key={track.id}
-                track={track}
-                isLiked={
-                  showAllTracksAsLiked
-                    ? true
-                    : !!(track.stared_user ?? []).find(
-                        ({ id }) => id === auth.id,
-                      )
-                }
-                onClick={() => {
-                  dispatch(
-                    setCurrentTrack({
-                      playlist: tracks,
-                      track: track,
-                    }),
-                  )
-                }}
-              ></Track>
-            ))
+            filteredTracks
           ) : (
             <h2>В этом плейлисте нет треков</h2>
           )}
