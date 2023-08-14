@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './AudioPlayer.styles.js'
 import * as S from './AudioPlayer.styles.js'
 import { useDispatch, useSelector } from 'react-redux'
@@ -53,6 +53,23 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
     audioRef.current.volume = newVolume
   }
 
+  const handleSeek = (newTime) => {
+    audioRef.current.currentTime = newTime
+    play()
+  }
+
+  const handlePrevClick = () => {
+    if (currentTime > 5) {
+      handleSeek(0)
+    } else {
+      dispatch(prevTrack())
+    }
+  }
+
+  const handleNextClick = useCallback(() => {
+    dispatch(nextTrack())
+  }, [dispatch])
+
   useEffect(() => {
     const ref = audioRef.current
 
@@ -80,25 +97,18 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   }, [])
 
   useEffect(() => {
+    const ref = audioRef.current
     if (playing) {
-      audioRef.current.play()
+      ref.play()
     } else {
-      audioRef.current.pause()
+      ref.pause()
     }
-  }, [playing, url])
 
-  const handleSeek = (newTime) => {
-    audioRef.current.currentTime = newTime
-    play()
-  }
-
-  const handlePrevClick = () => {
-    if (currentTime > 5) {
-      handleSeek(0)
-    } else {
-      dispatch(prevTrack())
+    ref.addEventListener('ended', handleNextClick)
+    return () => {
+      ref.removeEventListener('ended', handleNextClick)
     }
-  }
+  }, [playing, url, handleNextClick])
 
   return (
     <S.Bar>
@@ -151,12 +161,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 )}
               </S.PlayerControlWithRightMargin>
               <S.PlayerNextIcon>
-                <S.PlayerSvgNext
-                  alt="next"
-                  onClick={() => {
-                    dispatch(nextTrack())
-                  }}
-                >
+                <S.PlayerSvgNext alt="next" onClick={handleNextClick}>
                   <svg>
                     <use xlinkHref="/img/icon/sprite.svg#icon-next"></use>
                   </svg>
