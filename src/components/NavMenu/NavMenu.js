@@ -10,7 +10,7 @@ export default function NavMenu() {
   return (
     <S.MainNav>
       <S.NavLogo>
-        <S.LogoImage src="img/logo.png" alt="logo" />
+        <S.LogoImage src="/img/logo.png" alt="logo" />
       </S.NavLogo>
       <S.NavBurger onClick={() => setOpen(!open)}>
         <S.BurgerLine></S.BurgerLine>

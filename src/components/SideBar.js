@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import './SideBar.css'
 import { useAuth } from '../auth'
 
-export default function SideBar({ isLoading }) {
+export default function SideBar({ showCategory }) {
   const { auth, logout } = useAuth()
   return (
     <div className="main__sidebar sidebar">
@@ -26,24 +26,15 @@ export default function SideBar({ isLoading }) {
           </svg>
         </div>
       </div>
-      <div className="sidebar__block">
-        <div className="sidebar__list">
-          {isLoading ? (
-            [1, 2, 3].map((item) => {
-              return (
-                <div
-                  key={item}
-                  className="sidebar__item sidebar__item--skeleton"
-                ></div>
-              )
-            })
-          ) : (
+      {showCategory ? (
+        <div className="sidebar__block">
+          <div className="sidebar__list">
             <>
               <div className="sidebar__item">
                 <Link className="sidebar__link" to="/category/1">
                   <img
                     className="sidebar__img"
-                    src="img/playlist01.png"
+                    src="/img/playlist01.png"
                     alt="day's playlist"
                   />
                 </Link>
@@ -52,7 +43,7 @@ export default function SideBar({ isLoading }) {
                 <Link className="sidebar__link" to="/category/2">
                   <img
                     className="sidebar__img"
-                    src="img/playlist02.png"
+                    src="/img/playlist02.png"
                     alt="day's playlist"
                   />
                 </Link>
@@ -61,15 +52,15 @@ export default function SideBar({ isLoading }) {
                 <Link className="sidebar__link" to="/category/3">
                   <img
                     className="sidebar__img"
-                    src="img/playlist03.png"
+                    src="/img/playlist03.png"
                     alt="day's playlist"
                   />
                 </Link>
               </div>
             </>
-          )}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   )
 }

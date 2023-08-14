@@ -21,6 +21,15 @@ export const playlistApi = createApi({
       }),
       providesTags: () => [TRACKS_TAG],
     }),
+    getCategory: builder.query({
+      query: ({ id, token }) => ({
+        url: `/catalog/selection/${id}/`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: () => [TRACKS_TAG],
+    }),
     likeTrack: builder.mutation({
       query: ({ id, token }) => ({
         url: `/catalog/track/${id}/favorite/`,
@@ -49,4 +58,5 @@ export const {
   useGetMyPlaylistQuery,
   useLikeTrackMutation,
   useDislikeTrackMutation,
+  useGetCategoryQuery,
 } = playlistApi
