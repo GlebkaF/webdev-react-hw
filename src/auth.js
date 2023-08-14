@@ -1,5 +1,7 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setAuth } from './store/auth'
 
 const AUTH_KEY = 'auth'
 
@@ -15,20 +17,25 @@ function getAuthFromLocalStorage() {
 const AuthContext = createContext(null)
 
 export const WithAuth = ({ children }) => {
-  const [auth, setAuth] = useState(getAuthFromLocalStorage())
+  const [auth, setAuthState] = useState(getAuthFromLocalStorage())
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const login = (authData) => {
-    setAuth(authData)
+    setAuthState(authData)
     localStorage.setItem(AUTH_KEY, JSON.stringify(authData))
     navigate('/')
   }
 
   const logout = () => {
-    setAuth(null)
+    setAuthState(null)
     localStorage.removeItem(AUTH_KEY)
     navigate('/')
   }
+
+  useEffect(() => {
+    dispatch(setAuth(auth))
+  }, [auth, dispatch])
 
   return (
     <AuthContext.Provider

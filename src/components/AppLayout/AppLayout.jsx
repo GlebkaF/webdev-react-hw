@@ -23,11 +23,7 @@ export default function AppLayout() {
     if (!store.audioplayer.track) {
       return null
     }
-    return {
-      url: store.audioplayer.track.track_file,
-      track: store.audioplayer.track.name,
-      artist: store.audioplayer.track.author,
-    }
+    return store.audioplayer.track
   })
 
   return (
@@ -35,13 +31,7 @@ export default function AppLayout() {
       <Wrapper>
         <Container>
           <Outlet></Outlet>
-          {track ? (
-            <AudioPlayer
-              track={track.track}
-              artist={track.artist}
-              url={track.url}
-            />
-          ) : null}
+          {track ? <AudioPlayer track={track} /> : null}
         </Container>
       </Wrapper>
     </App>

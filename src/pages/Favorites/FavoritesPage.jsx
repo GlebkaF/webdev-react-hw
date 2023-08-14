@@ -4,7 +4,7 @@ import Tracklist from '../../components/Tracklist'
 
 export default function FavoritesPage() {
   const { auth, logout } = useAuth()
-  const { data, error, isLoading } = useGetMyPlaylistQuery(auth.access)
+  const { data, error, isLoading } = useGetMyPlaylistQuery({ auth })
 
   if (error?.status === 401) {
     logout()

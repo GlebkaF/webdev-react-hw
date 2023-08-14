@@ -1,4 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  createDislikeTrackAction,
+  createLikeTrackAction,
+} from '../store/slice/audioplayer/actions'
 
 const TRACKS_TAG = 'Tracks'
 
@@ -13,12 +17,26 @@ export const playlistApi = createApi({
       providesTags: () => [TRACKS_TAG],
     }),
     getMyPlaylist: builder.query({
-      query: (token) => ({
+      query: ({ auth }) => ({
         url: '/catalog/track/favorite/all/',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.access}`,
         },
       }),
+      transformResponse: (response, meta, arg) => {
+        return response.map((item) => ({
+          ...item,
+          stared_user: [
+            {
+              id: arg.auth.id,
+              username: arg.auth.username,
+              first_name: arg.auth.first_name,
+              last_name: arg.auth.last_name,
+              email: arg.auth.email,
+            },
+          ],
+        }))
+      },
       providesTags: () => [TRACKS_TAG],
     }),
     getCategory: builder.query({
@@ -36,6 +54,16 @@ export const playlistApi = createApi({
         },
       }),
       invalidatesTags: [TRACKS_TAG],
+      async onQueryStarted(args, { dispatch, getState, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(
+            createLikeTrackAction({ id: args.id, auth: getState().auth }),
+          )
+        } catch (error) {
+          console.error(error)
+        }
+      },
     }),
     dislikeTrack: builder.mutation({
       query: ({ id, token }) => ({
@@ -46,6 +74,16 @@ export const playlistApi = createApi({
         },
       }),
       invalidatesTags: [TRACKS_TAG],
+      async onQueryStarted(args, { dispatch, getState, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(
+            createDislikeTrackAction({ id: args.id, auth: getState().auth }),
+          )
+        } catch (error) {
+          console.error(error)
+        }
+      },
     }),
   }),
 })

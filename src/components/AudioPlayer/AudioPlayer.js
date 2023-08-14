@@ -9,6 +9,11 @@ import {
   prevTrack,
   toggleShuffled,
 } from '../../store/slice/audioplayer/actions.js'
+import { useAuth } from '../../auth.js'
+import {
+  useDislikeTrackMutation,
+  useLikeTrackMutation,
+} from '../../api/playlist.js'
 
 function secondsToTimeString(seconds) {
   return (
@@ -20,8 +25,9 @@ function secondsToTimeString(seconds) {
   )
 }
 
-export default function AudioPlayer({ track = '', artist = '', url = '' }) {
+export default function AudioPlayer({ track }) {
   const audioRef = useRef(null)
+  const { auth, logout } = useAuth()
   const [isLooped, setIsLooped] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -29,13 +35,21 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   const dispatch = useDispatch()
   const { shuffled, playing } = useSelector((store) => store.audioplayer)
 
-  const play = () => {
-    dispatch(createPlayAction())
-  }
+  const url = track.track_file
+  const name = track.name
+  const artist = track.author
 
-  const pause = () => {
+  const isTrackLiked = !!(track.stared_user ?? []).find(
+    ({ id }) => id === auth.id,
+  )
+
+  const play = useCallback(() => {
+    dispatch(createPlayAction())
+  }, [dispatch])
+
+  const pause = useCallback(() => {
     dispatch(createPauseAction())
-  }
+  }, [dispatch])
 
   const toggleLoop = () => {
     if (isLooped) {
@@ -70,6 +84,22 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
     dispatch(nextTrack())
   }, [dispatch])
 
+  const [like, { error: likeError }] = useLikeTrackMutation()
+  const [dislike, { error: dislikeError }] = useDislikeTrackMutation()
+
+  const likeCurrentTrack = () => {
+    like({
+      id: track.id,
+      token: auth.access,
+    })
+  }
+  const dislikeCurrentTrack = () => {
+    dislike({
+      id: track.id,
+      token: auth.access,
+    })
+  }
+
   useEffect(() => {
     const ref = audioRef.current
 
@@ -97,18 +127,53 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   }, [])
 
   useEffect(() => {
+    const handleSpacePress = (event) => {
+      // Нажат пробел
+      if (event.key === ' ') {
+        event.preventDefault()
+        if (playing) {
+          pause()
+        } else {
+          play()
+        }
+      }
+    }
+
+    document.addEventListener('keypress', handleSpacePress)
+
+    return () => {
+      document.removeEventListener('keypress', handleSpacePress)
+    }
+  }, [play, pause, playing])
+
+  useEffect(() => {
     const ref = audioRef.current
     if (playing) {
       ref.play()
     } else {
       ref.pause()
     }
+  }, [playing, url])
+
+  useEffect(() => {
+    const ref = audioRef.current
 
     ref.addEventListener('ended', handleNextClick)
     return () => {
       ref.removeEventListener('ended', handleNextClick)
     }
-  }, [playing, url, handleNextClick])
+  }, [handleNextClick])
+
+  const error = likeError ?? dislikeError ?? null
+
+  if (error) {
+    if (error?.status === 401) {
+      logout()
+      return null
+    }
+    console.error(error)
+    alert(`Ошибка лайка: ${error.message}`)
+  }
 
   return (
     <S.Bar>
@@ -200,7 +265,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 </S.TrackPlayImage>
                 <S.TrackPlayAuthor>
                   <S.TrackPlayAuthorLink href="http://">
-                    <span>{track}</span>
+                    <span>{name}</span>
                   </S.TrackPlayAuthorLink>
                 </S.TrackPlayAuthor>
                 <S.TrackPlayAlbum>
@@ -210,32 +275,28 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 </S.TrackPlayAlbum>
               </S.TrackContain>
 
-              {/* <S.TrackPlayLikeDis>
-                <S.TrackLike
-                  className="_btn-icon"
-                  onClick={() => {
-                    alert('Еще не реализовано')
-                  }}
-                >
-                  <S.TrackLikeSvg alt="like">
-                    <svg>
-                      <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
-                    </svg>
-                  </S.TrackLikeSvg>
-                </S.TrackLike>
-                <S.TrackDislike
-                  className="_btn-icon"
-                  onClick={() => {
-                    alert('Еще не реализовано')
-                  }}
-                >
-                  <S.TrackLikeSvg alt="dislike">
-                    <svg>
-                      <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
-                    </svg>
-                  </S.TrackLikeSvg>
-                </S.TrackDislike>
-              </S.TrackPlayLikeDis> */}
+              <S.TrackPlayLikeDis>
+                {!isTrackLiked ? (
+                  <S.TrackLike className="_btn-icon" onClick={likeCurrentTrack}>
+                    <S.TrackLikeSvg alt="like">
+                      <svg>
+                        <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
+                      </svg>
+                    </S.TrackLikeSvg>
+                  </S.TrackLike>
+                ) : (
+                  <S.TrackDislike
+                    className="_btn-icon"
+                    onClick={dislikeCurrentTrack}
+                  >
+                    <S.TrackLikeSvg alt="dislike">
+                      <svg>
+                        <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
+                      </svg>
+                    </S.TrackLikeSvg>
+                  </S.TrackDislike>
+                )}
+              </S.TrackPlayLikeDis>
             </S.TrackPlay>
           </S.BarPlayer>
           <S.BarVolumeBlock>
