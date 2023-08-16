@@ -1,48 +1,17 @@
-import { createContext, useContext, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setAuth } from './store/auth'
 
-const AUTH_KEY = 'auth'
-
-function getAuthFromLocalStorage() {
-  try {
-    return JSON.parse(localStorage.getItem(AUTH_KEY))
-  } catch (error) {
-    console.error(error)
-    return null
-  }
-}
-
-const AuthContext = createContext(null)
-
-export const WithAuth = ({ children }) => {
-  const [auth, setAuth] = useState(getAuthFromLocalStorage())
+export const useLogout = () => {
   const navigate = useNavigate()
-
-  const login = (authData) => {
-    setAuth(authData)
-    localStorage.setItem(AUTH_KEY, JSON.stringify(authData))
-    navigate('/')
+  const dispatch = useDispatch()
+  return () => {
+    dispatch(setAuth(null))
+    navigate('/login')
   }
-
-  const logout = () => {
-    setAuth(null)
-    localStorage.removeItem(AUTH_KEY)
-    navigate('/')
-  }
-
-  return (
-    <AuthContext.Provider
-      value={{
-        auth,
-        login,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
 }
 
-export const useAuth = () => {
-  return useContext(AuthContext)
+export const useAuthSelector = () => {
+  const auth = useSelector((store) => store.auth)
+  return auth
 }

@@ -84,8 +84,7 @@ export const PlayerBlock = styled.div`
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-
-  background: rgba(28, 28, 28, 0.7);
+  background: rgba(28, 28, 28, 1);
 `
 
 export const BarPlayer = styled.div`
@@ -285,9 +284,7 @@ export const TrackLike = styled.div`
   padding: 5px;
 `
 
-export const TrackDislike = styled(TrackLike)`
-  margin-left: 28.5px;
-`
+export const TrackDislike = styled(TrackLike)``
 
 export const TrackLikeSvg = styled.svg`
   width: 13px;

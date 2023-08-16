@@ -1,4 +1,7 @@
+import { remove } from 'lodash'
 import {
+  DISLIKE_TRACK,
+  LIKE_TRACK,
   NEXT_TRACK,
   PAUSE,
   PLAY,
@@ -90,6 +93,42 @@ export default function audioplayerReducer(state = initialState, action) {
       return {
         ...state,
         playing: false,
+      }
+    }
+
+    case DISLIKE_TRACK:
+    case LIKE_TRACK: {
+      const { id, auth } = action.payload
+
+      const applyActionToTrack = (track) => {
+        const staredWithoutCurrentUser = remove(
+          ...track.stared_user,
+          ({ id }) => auth.id === id,
+        )
+
+        const newStaredUsers =
+          action.type === LIKE_TRACK
+            ? [...staredWithoutCurrentUser, auth]
+            : staredWithoutCurrentUser
+
+        return {
+          ...track,
+          stared_user: newStaredUsers,
+        }
+      }
+
+      return {
+        ...state,
+        track:
+          state.track?.id === id
+            ? applyActionToTrack(state.track)
+            : state.track,
+        playlist: state.playlist.map((item) =>
+          item.id === id ? applyActionToTrack(item) : item,
+        ),
+        shuffledPlaylist: state.shuffledPlaylist.map((item) =>
+          item.id === id ? applyActionToTrack(item) : item,
+        ),
       }
     }
 

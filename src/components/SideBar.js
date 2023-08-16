@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import './SideBar.css'
-import { useAuth } from '../auth'
+import { useAuthSelector, useLogout } from '../auth'
 
-export default function SideBar({ isLoading }) {
-  const { auth, logout } = useAuth()
+export default function SideBar({ showCategory }) {
+  const logout = useLogout()
+  const auth = useAuthSelector()
   return (
     <div className="main__sidebar sidebar">
       <div className="sidebar__personal">
@@ -26,24 +27,15 @@ export default function SideBar({ isLoading }) {
           </svg>
         </div>
       </div>
-      <div className="sidebar__block">
-        <div className="sidebar__list">
-          {isLoading ? (
-            [1, 2, 3].map((item) => {
-              return (
-                <div
-                  key={item}
-                  className="sidebar__item sidebar__item--skeleton"
-                ></div>
-              )
-            })
-          ) : (
+      {showCategory ? (
+        <div className="sidebar__block">
+          <div className="sidebar__list">
             <>
               <div className="sidebar__item">
                 <Link className="sidebar__link" to="/category/1">
                   <img
                     className="sidebar__img"
-                    src="img/playlist01.png"
+                    src="/img/playlist-classic.png"
                     alt="day's playlist"
                   />
                 </Link>
@@ -52,7 +44,7 @@ export default function SideBar({ isLoading }) {
                 <Link className="sidebar__link" to="/category/2">
                   <img
                     className="sidebar__img"
-                    src="img/playlist02.png"
+                    src="/img/playlist-electro.png"
                     alt="day's playlist"
                   />
                 </Link>
@@ -61,15 +53,15 @@ export default function SideBar({ isLoading }) {
                 <Link className="sidebar__link" to="/category/3">
                   <img
                     className="sidebar__img"
-                    src="img/playlist03.png"
+                    src="/img/playlist-rock.png"
                     alt="day's playlist"
                   />
                 </Link>
               </div>
             </>
-          )}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   )
 }

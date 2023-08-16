@@ -6,6 +6,7 @@ import CategoryPage from './pages/Category/CategoryPage'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import AuthPage from './pages/Auth/AuthPage'
 import PageLayout from './components/PageLayout/PageLayout'
+import AppLayout from './components/AppLayout/AppLayout'
 
 export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
   return (
@@ -32,23 +33,33 @@ export default function AppRoutes({ isLoggedIn, setIsLoggedIn }) {
       ></Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route element={<PageLayout></PageLayout>}>
+        <Route element={<AppLayout></AppLayout>}>
           <Route
             path="/"
             element={
-              <MainPage
-                isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-              ></MainPage>
+              <PageLayout showCategory={true}>
+                <MainPage
+                  isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
+                ></MainPage>
+              </PageLayout>
             }
           ></Route>
           <Route
             path="/category/:id"
-            element={<CategoryPage></CategoryPage>}
+            element={
+              <PageLayout>
+                <CategoryPage></CategoryPage>
+              </PageLayout>
+            }
           ></Route>
           <Route
             path="/favorites"
-            element={<FavoritesPage></FavoritesPage>}
+            element={
+              <PageLayout>
+                <FavoritesPage></FavoritesPage>
+              </PageLayout>
+            }
           ></Route>
         </Route>
       </Route>

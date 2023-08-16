@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux'
 import './Track.css'
 import { useDislikeTrackMutation, useLikeTrackMutation } from '../api/playlist'
-import { useAuth } from '../auth'
 
 export default function Track({ track, isLoading, onClick, isLiked }) {
   const time =
@@ -14,7 +13,6 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
   const { playing, track: currentTrack } = useSelector(
     (store) => store.audioplayer,
   )
-  const { auth, logout } = useAuth()
 
   const [like, { error: likeError }] = useLikeTrackMutation()
   const [dislike, { error: dislikeError }] = useDislikeTrackMutation()
@@ -23,12 +21,10 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
     if (isLiked) {
       dislike({
         id: track.id,
-        token: auth.access,
       })
     } else {
       like({
         id: track.id,
-        token: auth.access,
       })
     }
   }
@@ -36,10 +32,6 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
   const error = likeError ?? dislikeError ?? null
 
   if (error) {
-    if (error?.status === 401) {
-      logout()
-      return null
-    }
     console.error(error)
     alert(`Ошибка лайка: ${error.message}`)
   }
@@ -55,7 +47,7 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
               ></div>
             ) : (
               <svg className="track__title-svg" alt="music">
-                <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
               </svg>
             )}
           </div>
@@ -97,9 +89,9 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
         <div className="track__time">
           <svg className="track__time-svg" alt="time" onClick={handleLikeClick}>
             {isLiked ? (
-              <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
+              <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
             ) : (
-              <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
             )}
           </svg>
 

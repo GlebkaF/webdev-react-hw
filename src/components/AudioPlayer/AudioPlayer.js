@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './AudioPlayer.styles.js'
 import * as S from './AudioPlayer.styles.js'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,6 +9,11 @@ import {
   prevTrack,
   toggleShuffled,
 } from '../../store/slice/audioplayer/actions.js'
+import { useAuthSelector } from '../../auth.js'
+import {
+  useDislikeTrackMutation,
+  useLikeTrackMutation,
+} from '../../api/playlist.js'
 
 function secondsToTimeString(seconds) {
   return (
@@ -20,8 +25,9 @@ function secondsToTimeString(seconds) {
   )
 }
 
-export default function AudioPlayer({ track = '', artist = '', url = '' }) {
+export default function AudioPlayer({ track }) {
   const audioRef = useRef(null)
+  const auth = useAuthSelector()
   const [isLooped, setIsLooped] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -29,13 +35,21 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   const dispatch = useDispatch()
   const { shuffled, playing } = useSelector((store) => store.audioplayer)
 
-  const play = () => {
-    dispatch(createPlayAction())
-  }
+  const url = track.track_file
+  const name = track.name
+  const artist = track.author
 
-  const pause = () => {
+  const isTrackLiked = !!(track.stared_user ?? []).find(
+    ({ id }) => id === auth.id,
+  )
+
+  const play = useCallback(() => {
+    dispatch(createPlayAction())
+  }, [dispatch])
+
+  const pause = useCallback(() => {
     dispatch(createPauseAction())
-  }
+  }, [dispatch])
 
   const toggleLoop = () => {
     if (isLooped) {
@@ -51,6 +65,37 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
     const newVolume = event.target.value
     setVolume(newVolume)
     audioRef.current.volume = newVolume
+  }
+
+  const handleSeek = (newTime) => {
+    audioRef.current.currentTime = newTime
+    play()
+  }
+
+  const handlePrevClick = () => {
+    if (currentTime > 5) {
+      handleSeek(0)
+    } else {
+      dispatch(prevTrack())
+    }
+  }
+
+  const handleNextClick = useCallback(() => {
+    dispatch(nextTrack())
+  }, [dispatch])
+
+  const [like, { error: likeError }] = useLikeTrackMutation()
+  const [dislike, { error: dislikeError }] = useDislikeTrackMutation()
+
+  const likeCurrentTrack = () => {
+    like({
+      id: track.id,
+    })
+  }
+  const dislikeCurrentTrack = () => {
+    dislike({
+      id: track.id,
+    })
   }
 
   useEffect(() => {
@@ -80,24 +125,48 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
   }, [])
 
   useEffect(() => {
+    const handleSpacePress = (event) => {
+      // Нажат пробел
+      if (event.key === ' ') {
+        event.preventDefault()
+        if (playing) {
+          pause()
+        } else {
+          play()
+        }
+      }
+    }
+
+    document.addEventListener('keypress', handleSpacePress)
+
+    return () => {
+      document.removeEventListener('keypress', handleSpacePress)
+    }
+  }, [play, pause, playing])
+
+  useEffect(() => {
+    const ref = audioRef.current
     if (playing) {
-      audioRef.current.play()
+      ref.play()
     } else {
-      audioRef.current.pause()
+      ref.pause()
     }
   }, [playing, url])
 
-  const handleSeek = (newTime) => {
-    audioRef.current.currentTime = newTime
-    play()
-  }
+  useEffect(() => {
+    const ref = audioRef.current
 
-  const handlePrevClick = () => {
-    if (currentTime > 5) {
-      handleSeek(0)
-    } else {
-      dispatch(prevTrack())
+    ref.addEventListener('ended', handleNextClick)
+    return () => {
+      ref.removeEventListener('ended', handleNextClick)
     }
+  }, [handleNextClick])
+
+  const error = likeError ?? dislikeError ?? null
+
+  if (error) {
+    console.error(error)
+    alert(`Ошибка лайка: ${error.message}`)
   }
 
   return (
@@ -124,7 +193,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
               <S.PlayerControlWithRightMargin>
                 <S.PlayerSvgPrev alt="prev" onClick={handlePrevClick}>
                   <svg>
-                    <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
+                    <use xlinkHref="/img/icon/sprite.svg#icon-prev"></use>
                   </svg>
                 </S.PlayerSvgPrev>
               </S.PlayerControlWithRightMargin>
@@ -145,27 +214,22 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 ) : (
                   <S.PlayerSvgPlay onClick={play} alt="play">
                     <svg>
-                      <use xlinkHref="img/icon/sprite.svg#icon-play"></use>
+                      <use xlinkHref="/img/icon/sprite.svg#icon-play"></use>
                     </svg>
                   </S.PlayerSvgPlay>
                 )}
               </S.PlayerControlWithRightMargin>
               <S.PlayerNextIcon>
-                <S.PlayerSvgNext
-                  alt="next"
-                  onClick={() => {
-                    dispatch(nextTrack())
-                  }}
-                >
+                <S.PlayerSvgNext alt="next" onClick={handleNextClick}>
                   <svg>
-                    <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
+                    <use xlinkHref="/img/icon/sprite.svg#icon-next"></use>
                   </svg>
                 </S.PlayerSvgNext>
               </S.PlayerNextIcon>
               <S.PlayerRepeatIcon className="_btn-icon" onClick={toggleLoop}>
                 <S.PlayerSvgRepeat alt="repeat" $active={isLooped}>
                   <svg>
-                    <use xlinkHref="img/icon/sprite.svg#icon-repeat"></use>
+                    <use xlinkHref="/img/icon/sprite.svg#icon-repeat"></use>
                   </svg>
                 </S.PlayerSvgRepeat>
               </S.PlayerRepeatIcon>
@@ -178,7 +242,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                   }}
                 >
                   <svg>
-                    <use xlinkHref="img/icon/sprite.svg#icon-shuffle"></use>
+                    <use xlinkHref="/img/icon/sprite.svg#icon-shuffle"></use>
                   </svg>
                 </S.PlayerSvgShuffle>
               </S.PlayerShuffleIcon>
@@ -189,13 +253,13 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 <S.TrackPlayImage>
                   <S.TrackPlaySvg alt="music">
                     <svg>
-                      <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                      <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
                     </svg>
                   </S.TrackPlaySvg>
                 </S.TrackPlayImage>
                 <S.TrackPlayAuthor>
                   <S.TrackPlayAuthorLink href="http://">
-                    <span>{track}</span>
+                    <span>{name}</span>
                   </S.TrackPlayAuthorLink>
                 </S.TrackPlayAuthor>
                 <S.TrackPlayAlbum>
@@ -205,32 +269,28 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
                 </S.TrackPlayAlbum>
               </S.TrackContain>
 
-              {/* <S.TrackPlayLikeDis>
-                <S.TrackLike
-                  className="_btn-icon"
-                  onClick={() => {
-                    alert('Еще не реализовано')
-                  }}
-                >
-                  <S.TrackLikeSvg alt="like">
-                    <svg>
-                      <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                    </svg>
-                  </S.TrackLikeSvg>
-                </S.TrackLike>
-                <S.TrackDislike
-                  className="_btn-icon"
-                  onClick={() => {
-                    alert('Еще не реализовано')
-                  }}
-                >
-                  <S.TrackLikeSvg alt="dislike">
-                    <svg>
-                      <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
-                    </svg>
-                  </S.TrackLikeSvg>
-                </S.TrackDislike>
-              </S.TrackPlayLikeDis> */}
+              <S.TrackPlayLikeDis>
+                {!isTrackLiked ? (
+                  <S.TrackLike className="_btn-icon" onClick={likeCurrentTrack}>
+                    <S.TrackLikeSvg alt="like">
+                      <svg>
+                        <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
+                      </svg>
+                    </S.TrackLikeSvg>
+                  </S.TrackLike>
+                ) : (
+                  <S.TrackDislike
+                    className="_btn-icon"
+                    onClick={dislikeCurrentTrack}
+                  >
+                    <S.TrackLikeSvg alt="dislike">
+                      <svg>
+                        <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
+                      </svg>
+                    </S.TrackLikeSvg>
+                  </S.TrackDislike>
+                )}
+              </S.TrackPlayLikeDis>
             </S.TrackPlay>
           </S.BarPlayer>
           <S.BarVolumeBlock>
@@ -238,7 +298,7 @@ export default function AudioPlayer({ track = '', artist = '', url = '' }) {
               <S.VolumeImage>
                 <S.VolumeSvg alt="volume">
                   <svg>
-                    <use xlinkHref="img/icon/sprite.svg#icon-volume"></use>
+                    <use xlinkHref="/img/icon/sprite.svg#icon-volume"></use>
                   </svg>
                 </S.VolumeSvg>
               </S.VolumeImage>

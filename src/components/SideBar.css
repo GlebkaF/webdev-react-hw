@@ -3,6 +3,12 @@
   padding: 20px 90px 20px 78px;
 }
 
+@media (width <= 1900px) {
+  .main__sidebar {
+    display: none;
+  }
+}
+
 .sidebar__personal {
   display: -webkit-box;
   display: -ms-flexbox;
