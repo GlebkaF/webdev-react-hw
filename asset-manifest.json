@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/webdev-react-hw/static/css/main.b2ed3bf2.css",
-    "main.js": "/webdev-react-hw/static/js/main.b89c1108.js",
+    "main.js": "/webdev-react-hw/static/js/main.1efb0430.js",
     "static/media/StratosSkyeng.woff": "/webdev-react-hw/static/media/StratosSkyeng.d20eb275042a513c8d55.woff",
     "static/media/StratosSkyeng.woff2": "/webdev-react-hw/static/media/StratosSkyeng.ec4882423f79afa46408.woff2",
     "index.html": "/webdev-react-hw/index.html",
     "main.b2ed3bf2.css.map": "/webdev-react-hw/static/css/main.b2ed3bf2.css.map",
-    "main.b89c1108.js.map": "/webdev-react-hw/static/js/main.b89c1108.js.map"
+    "main.1efb0430.js.map": "/webdev-react-hw/static/js/main.1efb0430.js.map"
   },
   "entrypoints": [
     "static/css/main.b2ed3bf2.css",
-    "static/js/main.b89c1108.js"
+    "static/js/main.1efb0430.js"
   ]
 }
