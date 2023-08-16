@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.07ec175a.css",
-    "main.js": "/static/js/main.4aac22be.js",
-    "static/media/StratosSkyeng.woff": "/static/media/StratosSkyeng.d20eb275042a513c8d55.woff",
-    "static/media/StratosSkyeng.woff2": "/static/media/StratosSkyeng.ec4882423f79afa46408.woff2",
-    "index.html": "/index.html",
-    "main.07ec175a.css.map": "/static/css/main.07ec175a.css.map",
-    "main.4aac22be.js.map": "/static/js/main.4aac22be.js.map"
+    "main.css": "/webdev-react-hw/static/css/main.b2ed3bf2.css",
+    "main.js": "/webdev-react-hw/static/js/main.b89c1108.js",
+    "static/media/StratosSkyeng.woff": "/webdev-react-hw/static/media/StratosSkyeng.d20eb275042a513c8d55.woff",
+    "static/media/StratosSkyeng.woff2": "/webdev-react-hw/static/media/StratosSkyeng.ec4882423f79afa46408.woff2",
+    "index.html": "/webdev-react-hw/index.html",
+    "main.b2ed3bf2.css.map": "/webdev-react-hw/static/css/main.b2ed3bf2.css.map",
+    "main.b89c1108.js.map": "/webdev-react-hw/static/js/main.b89c1108.js.map"
   },
   "entrypoints": [
-    "static/css/main.07ec175a.css",
-    "static/js/main.4aac22be.js"
+    "static/css/main.b2ed3bf2.css",
+    "static/js/main.b89c1108.js"
   ]
 }
