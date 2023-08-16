@@ -35,7 +35,7 @@ export default function SideBar({ showCategory }) {
                 <Link className="sidebar__link" to="/category/1">
                   <img
                     className="sidebar__img"
-                    src="./img/playlist-classic.png"
+                    src="/webdev-react-hw/img/playlist-classic.png"
                     alt="day's playlist"
                   />
                 </Link>
@@ -44,7 +44,7 @@ export default function SideBar({ showCategory }) {
                 <Link className="sidebar__link" to="/category/2">
                   <img
                     className="sidebar__img"
-                    src="./img/playlist-electro.png"
+                    src="/webdev-react-hw/img/playlist-electro.png"
                     alt="day's playlist"
                   />
                 </Link>
@@ -53,7 +53,7 @@ export default function SideBar({ showCategory }) {
                 <Link className="sidebar__link" to="/category/3">
                   <img
                     className="sidebar__img"
-                    src="./img/playlist-rock.png"
+                    src="/webdev-react-hw/img/playlist-rock.png"
                     alt="day's playlist"
                   />
                 </Link>
