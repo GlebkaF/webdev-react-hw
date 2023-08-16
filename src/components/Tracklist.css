@@ -131,3 +131,13 @@
   fill: transparent;
   stroke: #696969;
 }
+
+@media (width <= 1900px) {
+  .main__centerblock {
+    padding: 20px;
+  }
+
+  .content__playlist {
+    padding-bottom: 150px;
+  }
+}

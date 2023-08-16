@@ -176,6 +176,7 @@ export default function Tracklist({
               selectedValues={selectedYears}
               setSelectedValues={setSelectedYears}
               multipleСhoice={false}
+              openToLeft={true}
             ></CategoryItem>
           </div>
         </StyledFiltersContainer>

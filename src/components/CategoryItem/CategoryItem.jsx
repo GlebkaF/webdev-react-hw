@@ -32,6 +32,8 @@ export default function CategoryItem({
   onClick,
   list,
   multipleСhoice = true,
+  // Чтобы элементы интерфейса прижатые к правой части экрана не уезжали за экран
+  openToLeft = false,
 }) {
   const handleItemClick = (item) => {
     const index = selectedValues.indexOf(item)
@@ -62,7 +64,7 @@ export default function CategoryItem({
       </div>
 
       {!isOpen ? null : (
-        <div className="filter-popup">
+        <div className={openToLeft ? 'filter-popup -to-left' : 'filter-popup'}>
           <ul className="filter-popup-list">
             {list.map((item) => {
               return (

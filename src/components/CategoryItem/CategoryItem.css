@@ -36,6 +36,11 @@
   min-width: 269px;
 }
 
+.-to-left {
+  left: unset;
+  right: 0;
+}
+
 .filter-popup-list {
   overflow-y: auto;
   max-height: 212px;
