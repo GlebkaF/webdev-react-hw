@@ -47,7 +47,7 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
               ></div>
             ) : (
               <svg className="track__title-svg" alt="music">
-                <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
+                <use xlinkHref="./img/icon/sprite.svg#icon-note"></use>
               </svg>
             )}
           </div>
@@ -89,9 +89,9 @@ export default function Track({ track, isLoading, onClick, isLiked }) {
         <div className="track__time">
           <svg className="track__time-svg" alt="time" onClick={handleLikeClick}>
             {isLiked ? (
-              <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
+              <use xlinkHref="./img/icon/sprite.svg#icon-dislike"></use>
             ) : (
-              <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
+              <use xlinkHref="./img/icon/sprite.svg#icon-like"></use>
             )}
           </svg>
 

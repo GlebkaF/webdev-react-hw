@@ -193,7 +193,7 @@ export default function AudioPlayer({ track }) {
               <S.PlayerControlWithRightMargin>
                 <S.PlayerSvgPrev alt="prev" onClick={handlePrevClick}>
                   <svg>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-prev"></use>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-prev"></use>
                   </svg>
                 </S.PlayerSvgPrev>
               </S.PlayerControlWithRightMargin>
@@ -214,7 +214,7 @@ export default function AudioPlayer({ track }) {
                 ) : (
                   <S.PlayerSvgPlay onClick={play} alt="play">
                     <svg>
-                      <use xlinkHref="/img/icon/sprite.svg#icon-play"></use>
+                      <use xlinkHref="./img/icon/sprite.svg#icon-play"></use>
                     </svg>
                   </S.PlayerSvgPlay>
                 )}
@@ -222,14 +222,14 @@ export default function AudioPlayer({ track }) {
               <S.PlayerNextIcon>
                 <S.PlayerSvgNext alt="next" onClick={handleNextClick}>
                   <svg>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-next"></use>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-next"></use>
                   </svg>
                 </S.PlayerSvgNext>
               </S.PlayerNextIcon>
               <S.PlayerRepeatIcon className="_btn-icon" onClick={toggleLoop}>
                 <S.PlayerSvgRepeat alt="repeat" $active={isLooped}>
                   <svg>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-repeat"></use>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-repeat"></use>
                   </svg>
                 </S.PlayerSvgRepeat>
               </S.PlayerRepeatIcon>
@@ -242,7 +242,7 @@ export default function AudioPlayer({ track }) {
                   }}
                 >
                   <svg>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-shuffle"></use>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-shuffle"></use>
                   </svg>
                 </S.PlayerSvgShuffle>
               </S.PlayerShuffleIcon>
@@ -253,7 +253,7 @@ export default function AudioPlayer({ track }) {
                 <S.TrackPlayImage>
                   <S.TrackPlaySvg alt="music">
                     <svg>
-                      <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
+                      <use xlinkHref="./img/icon/sprite.svg#icon-note"></use>
                     </svg>
                   </S.TrackPlaySvg>
                 </S.TrackPlayImage>
@@ -274,7 +274,7 @@ export default function AudioPlayer({ track }) {
                   <S.TrackLike className="_btn-icon" onClick={likeCurrentTrack}>
                     <S.TrackLikeSvg alt="like">
                       <svg>
-                        <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
+                        <use xlinkHref="./img/icon/sprite.svg#icon-like"></use>
                       </svg>
                     </S.TrackLikeSvg>
                   </S.TrackLike>
@@ -285,7 +285,7 @@ export default function AudioPlayer({ track }) {
                   >
                     <S.TrackLikeSvg alt="dislike">
                       <svg>
-                        <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
+                        <use xlinkHref="./img/icon/sprite.svg#icon-dislike"></use>
                       </svg>
                     </S.TrackLikeSvg>
                   </S.TrackDislike>
@@ -298,7 +298,7 @@ export default function AudioPlayer({ track }) {
               <S.VolumeImage>
                 <S.VolumeSvg alt="volume">
                   <svg>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-volume"></use>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-volume"></use>
                   </svg>
                 </S.VolumeSvg>
               </S.VolumeImage>
