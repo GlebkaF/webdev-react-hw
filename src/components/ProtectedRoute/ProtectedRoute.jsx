@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth } from '../../auth'
+import { useAuthSelector } from '../../auth'
 
 export default function ProtectedRoute() {
   const redirectPath = '/login'
 
-  const { auth } = useAuth()
-  if (!auth) {
+  const auth = useAuthSelector()
+
+  if (!auth.id) {
     return <Navigate to={redirectPath} replace={true}></Navigate>
   }
 

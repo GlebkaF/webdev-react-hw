@@ -1,14 +1,13 @@
 import { useGetMyPlaylistQuery } from '../../api/playlist'
-import { useAuth } from '../../auth'
+import { useAuthSelector } from '../../auth'
 import Tracklist from '../../components/Tracklist'
 
 export default function FavoritesPage() {
-  const { auth, logout } = useAuth()
+  const auth = useAuthSelector()
   const { data, error, isLoading } = useGetMyPlaylistQuery({ auth })
 
   if (error?.status === 401) {
-    logout()
-    return null
+    console.error(error)
   }
 
   return (

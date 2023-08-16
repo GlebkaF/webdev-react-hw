@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import * as S from './NavMenu.styles'
-import { useAuth } from '../../auth'
+import { useLogout } from '../../auth'
 
 export default function NavMenu() {
   const [open, setOpen] = useState(true)
 
-  const { auth, logout } = useAuth()
+  const logout = useLogout()
 
   return (
     <S.MainNav>
@@ -28,18 +28,14 @@ export default function NavMenu() {
               <S.MenuLink to="/favorites">Мои треки</S.MenuLink>
             </S.MenuItem>
             <S.MenuItem>
-              {!auth ? (
-                <S.MenuLink to="/login">Войти</S.MenuLink>
-              ) : (
-                <S.MenuLink
-                  onClick={(e) => {
-                    e.preventDefault()
-                    logout()
-                  }}
-                >
-                  Выйти
-                </S.MenuLink>
-              )}
+              <S.MenuLink
+                onClick={(e) => {
+                  e.preventDefault()
+                  logout()
+                }}
+              >
+                Выйти
+              </S.MenuLink>
             </S.MenuItem>
           </S.MenuList>
         </S.NavMenu>

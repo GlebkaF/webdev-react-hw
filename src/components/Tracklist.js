@@ -4,7 +4,7 @@ import './Tracklist.css'
 import CategoryItem from './CategoryItem/CategoryItem'
 import { useDispatch } from 'react-redux'
 import { setCurrentTrack } from '../store/slice/audioplayer/actions'
-import { useAuth } from '../auth'
+import { useAuthSelector } from '../auth'
 import { styled } from 'styled-components'
 import { compareAsc, compareDesc } from 'date-fns'
 
@@ -50,7 +50,7 @@ export default function Tracklist({
   title = 'Треки',
 }) {
   const dispatch = useDispatch()
-  const { auth } = useAuth()
+  const auth = useAuthSelector()
   const [searchQ, setSearchQ] = useState('')
 
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -182,7 +182,7 @@ export default function Tracklist({
       )}
       <div className="centerblock__content">
         <TracklistHeader></TracklistHeader>
-        <div className="content__playlist playlist">
+        <div className="content__playlist">
           {loading ? (
             [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
               <Track key={item} track={{}} isLoading={true}></Track>

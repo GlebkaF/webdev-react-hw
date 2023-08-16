@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom'
-import { useAuth } from '../../auth'
 
 import Tracklist from '../../components/Tracklist'
 import { useGetCategoryQuery } from '../../api/playlist'
@@ -7,16 +6,9 @@ import { useGetCategoryQuery } from '../../api/playlist'
 export default function CategoryPage() {
   const params = useParams()
 
-  const { auth, logout } = useAuth()
   const { data, error, isLoading } = useGetCategoryQuery({
-    token: auth.access,
     id: params.id,
   })
-
-  if (error?.status === 401) {
-    logout()
-    return null
-  }
 
   const tracks = data?.items || []
   const name = data?.name || ''

@@ -9,7 +9,7 @@ import {
   prevTrack,
   toggleShuffled,
 } from '../../store/slice/audioplayer/actions.js'
-import { useAuth } from '../../auth.js'
+import { useAuthSelector } from '../../auth.js'
 import {
   useDislikeTrackMutation,
   useLikeTrackMutation,
@@ -27,7 +27,7 @@ function secondsToTimeString(seconds) {
 
 export default function AudioPlayer({ track }) {
   const audioRef = useRef(null)
-  const { auth, logout } = useAuth()
+  const auth = useAuthSelector()
   const [isLooped, setIsLooped] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -90,13 +90,11 @@ export default function AudioPlayer({ track }) {
   const likeCurrentTrack = () => {
     like({
       id: track.id,
-      token: auth.access,
     })
   }
   const dislikeCurrentTrack = () => {
     dislike({
       id: track.id,
-      token: auth.access,
     })
   }
 
@@ -167,10 +165,6 @@ export default function AudioPlayer({ track }) {
   const error = likeError ?? dislikeError ?? null
 
   if (error) {
-    if (error?.status === 401) {
-      logout()
-      return null
-    }
     console.error(error)
     alert(`Ошибка лайка: ${error.message}`)
   }

@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import './SideBar.css'
-import { useAuth } from '../auth'
+import { useAuthSelector, useLogout } from '../auth'
 
 export default function SideBar({ showCategory }) {
-  const { auth, logout } = useAuth()
+  const logout = useLogout()
+  const auth = useAuthSelector()
   return (
     <div className="main__sidebar sidebar">
       <div className="sidebar__personal">

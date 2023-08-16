@@ -1,18 +1,20 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import * as S from './AuthPage.styles'
 import { login, register } from '../../api'
-import { useAuth } from '../../auth'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { setAuth } from '../../store/auth'
 
 export default function AuthPage({ isLoginMode = false }) {
-  const auth = useAuth()
-
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleLogin = async ({ email, password }) => {
     if (email.length === 0) {
@@ -31,7 +33,9 @@ export default function AuthPage({ isLoginMode = false }) {
 
       const loginData = await login({ email, password })
 
-      auth.login(loginData)
+      dispatch(setAuth(loginData))
+      // TODO: сделать навигацию по бек урл
+      navigate('/')
     } catch (error) {
       setError(error.message)
     } finally {
