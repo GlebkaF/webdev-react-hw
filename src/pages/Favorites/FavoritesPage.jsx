@@ -6,10 +6,6 @@ export default function FavoritesPage() {
   const auth = useAuthSelector()
   const { data, error, isLoading } = useGetMyPlaylistQuery({ auth })
 
-  if (error?.status === 401) {
-    console.error(error)
-  }
-
   return (
     <Tracklist
       tracks={data}

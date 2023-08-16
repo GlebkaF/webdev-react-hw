@@ -86,6 +86,13 @@ export const MenuItem = styled.li`
     margin: 0;
   }
 `
+
+export const MobileOnlyMenuItem = styled(MenuItem)`
+  display: none;
+  @media (width <= 1900px) {
+    display: block;
+  }
+`
 export const MenuLink = styled(Link)`
   color: #ffffff;
   font-weight: 400;
