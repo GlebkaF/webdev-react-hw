@@ -3,7 +3,7 @@
 
 export async function login({ email, password }) {
   const [loginRes, tokenRes] = await Promise.all([
-    fetch('https://painassasin.online/user/token/', {
+    fetch('https://music.glebfokin.ru/user/token/', {
       method: 'POST',
       body: JSON.stringify({
         email,
@@ -13,7 +13,7 @@ export async function login({ email, password }) {
         'content-type': 'application/json',
       },
     }),
-    fetch('https://painassasin.online/user/login/', {
+    fetch('https://music.glebfokin.ru/user/login/', {
       method: 'POST',
       body: JSON.stringify({
         email,
@@ -40,7 +40,7 @@ export async function login({ email, password }) {
 }
 
 export async function register({ email, password }) {
-  const res = await fetch('https://painassasin.online/user/signup/', {
+  const res = await fetch('https://music.glebfokin.ru/user/signup/', {
     method: 'POST',
     body: JSON.stringify({
       email,

@@ -23,7 +23,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
    * то есть вызов "await baseQuery(...)" можно воспринимать как вызов "await fetch(...)"
    */
   const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://painassasin.online',
+    baseUrl: 'https://music.glebfokin.ru',
     // prepareHeaders - это часть api fetchBaseQuery, которая позволяет сформировать общие заголовки для всех запросов
     prepareHeaders: (headers, { getState }) => {
       // Мы достаем из стора access токен и прикрепляем его ко всем запросам, чтобы не пробрасывать токен в каждый запрос вручную
@@ -113,7 +113,7 @@ export const playlistApi = createApi({
   // Используем кастомную baseQueryWithReauth вместо стандартной fetchBaseQuery
   baseQuery: baseQueryWithReauth,
   // baseQuery: fetchBaseQuery({
-  //   baseUrl: 'https://painassasin.online',
+  //   baseUrl: 'https://music.glebfokin.ru',
   // }),
   endpoints: (builder) => ({
     getMainPlaylist: builder.query({
